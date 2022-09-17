@@ -219,11 +219,94 @@ let apiSlice = createSlice({
     initialState: {
         accessToken: localStorage.getItem("ACCESS_TOKEN"),
         profile: JSON.parse(localStorage.getItem("PROFILE")),
-        currQuestion: null,
+        currQuestionIndex: 0,//Teacher side
+        currQuestionData:null,//student side
         questions: [],
         templates:[],
-        currTemplate:null,
+        currTemplate:{
+            "_id": "632308d9e5a90af31ff22155",
+            "questions": [
+                {
+                    "_id": "6325ca803f690f2455ed7e84",
+                    "text": "What member of the Galactica crew was eventually promoted to commander and placed in command of the Pegasus?",
+                    "type": "True/False",
+                    "choices": [
+                        "True",
+                        "False"
+                    ],
+                    "timer": 10,
+                    "creater": "6322e713204fb3e59b4bd411",
+                    "public": true,
+                    "played": 0,
+                    "correct_answer": "True",
+                    "correctly_answered": 0,
+                    "__v": 0
+                },
+                {
+                    "_id": "6325ca2ceea588ff9ca05771",
+                    "text": "What member of the Galactica crew was eventually promoted to commander and placed in command of the Pegasus?",
+                    "type": "MCQ",
+                    "choices": [
+                        1,
+                        2,
+                        3,
+                        4
+                    ],
+                    "timer": 30,
+                    "creater": "6322e713204fb3e59b4bd411",
+                    "public": true,
+                    "played": 0,
+                    "correct_answer": "4",
+                    "correctly_answered": 0,
+                    "__v": 0
+                },
+                {
+                    "_id": "6325ca24eea588ff9ca0576f",
+                    "text": "What member of the Galactica crew was eventually promoted to commander and placed in command of the Pegasus?",
+                    "type": "MCQ",
+                    "choices": [
+                        1,
+                        2,
+                        3,
+                        4
+                    ],
+                    "timer": 20,
+                    "creater": "6322e713204fb3e59b4bd411",
+                    "public": true,
+                    "played": 0,
+                    "correct_answer": "1",
+                    "correctly_answered": 0,
+                    "__v": 0
+                },
+                {
+                    "_id": "6325ca18eea588ff9ca0576d",
+                    "text": "What member of the Galactica crew was eventually promoted to commander and placed in command of the Pegasus?",
+                    "type": "MCQ",
+                    "choices": [
+                        1,
+                        2,
+                        3,
+                        4
+                    ],
+                    "timer": 15,
+                    "creater": "6322e713204fb3e59b4bd411",
+                    "public": true,
+                    "played": 0,
+                    "correct_answer": "3",
+                    "correctly_answered": 0,
+                    "__v": 0
+                }
+            ],
+            "title": "test",
+            "updated_at": "2022-09-15T11:13:10.377Z",
+            "created_at": "2022-09-15T11:13:10.377Z",
+            "rank": 0,
+            "__v": 0
+        },
         roomId:null,
+        socket:null,
+        name:null,//For one time login
+        studentsJoined:[],
         //Every time there is error show on top as popup for couple of seconds
         error: "",
         //Might not need it
@@ -233,6 +316,24 @@ let apiSlice = createSlice({
         setRoomId:(state,action)=>{
        state.roomId= action.payload
         },
+        setSocket:(state,action)=>{
+            state.socket = action.payload
+        },
+        oneTimeLogin:(state,action)=>{
+            state.name = action.payload
+        },
+        studentJoined:(state,action)=>{
+            state.studentsJoined.push(action.payload)
+        },
+        setCurrentQuestionTeacher:(state,action)=>{
+                state.currQuestionIndex++
+        },
+        setCurrentQuestionStudent:(state,action)=>{
+            state.currQuestionData = action.payload
+        },
+        updateReport:(state,action)=>{
+            console.log(action.payload)
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(createUser.pending, (state, action) => {
@@ -387,5 +488,5 @@ let apiSlice = createSlice({
         // })
     }
 })
-export const {setRoomId} =apiSlice.actions
+export const {setRoomId,setSocket,oneTimeLogin,studentJoined,setCurrentQuestionStudent,setCurrentQuestionTeacher,updateReport} =apiSlice.actions
 export default apiSlice.reducer

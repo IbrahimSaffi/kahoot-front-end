@@ -8,6 +8,8 @@ import { useEffect } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import apiSlice from './slices/apiSlice';
 import QuizRoom from './components/QuizRoom';
+import QuizPage from './components/QuizPage';
+import LiveReport from './components/LiveReport';
 
 function App() {
  let dispatch = useDispatch(apiSlice)
@@ -39,7 +41,7 @@ function App() {
            {/* //Add qustion/delete question/save template/save and start option */}
           <Route path = '/quiz-room' element={<QuizRoom/>}/> 
           {/* All socket stuff starts here/generate QR code and pin code/section showing joined people/start quiz button */}
-          <Route path = '/live-report'/>
+          <Route path = '/live-report' element={<LiveReport/>}/>
            {/* Waiting for students to answer /alert for every student answer/ and correct and wrong answer reports/ranks of each answer// after timer finishes click next question option// when clicked render next question from array//maintan curr question state/after whole array is traveresed go to final report page */}
           <Route path='/final-report'/>
            {/* Ranks/Go to templates (if clicked go to templates student will be displayed their result and feedback option)
@@ -50,7 +52,7 @@ function App() {
           <Route path="/join-quiz/:id" element={<JoinQuizPage/>}/>
           {/* same page as above but pin code section will be disabled/ */}
 
-         <Route path ="/quiz"/>
+         <Route path ="/quiz" element={<QuizPage/>} />
           {/* timer and stuff */}
          
           
