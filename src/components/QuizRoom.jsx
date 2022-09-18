@@ -37,14 +37,20 @@ export default function QuizRoom() {
   },[state.socket])
   
   return (
-    <div>
-      <p>Pincode:{state.roomId}</p>
-      <QRCode value={`${window.location.origin}/join-quiz/${state.roomId}`} />
+    <div className='quiz-room' >
+      <div className='row' >
+      <div>
       {state.studentsJoined.length===0?
       <p>Waiting for students to join</p>:
       state.studentsJoined.map(ele=>{
-        return <p>{ele.studentName}</p>
+        return <p>{ele.studentName} Joined</p>
       })}
+      </div>
+      <div>
+      <QRCode value={`${window.location.origin}/join-quiz/${state.roomId}`} />
+      <p>Pincode:{state.roomId}</p>
+      </div>
+      </div>
       <button onClick={()=>goTo("/live-report")} >Start Quiz</button>
     </div>
   )

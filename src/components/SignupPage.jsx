@@ -2,7 +2,7 @@ import React from 'react'
 import { Formik, Form, Field } from 'formik';
 import { useNavigate } from "react-router-dom"
 import * as Yup from 'yup';
-import apiSlice, { createUser } from '../slices/apiSlice';
+import apiSlice, { createUser, setError } from '../slices/apiSlice';
 import { useDispatch,useSelector } from 'react-redux';
 
 export default function SignupPage() {
@@ -26,7 +26,8 @@ export default function SignupPage() {
     }).required('Re-enter Password'),
   });
   return (
-    <div className='signup'>   <Formik
+    <div className='signup'> 
+      <Formik
       initialValues={{
         firstName: '',
         lastName: '',
@@ -43,8 +44,10 @@ export default function SignupPage() {
           try{
             let name = values.firstName+" "+values.lastName
             values.name = name
-            dispatch(createUser(values))
-              goTo("/login")   
+
+              dispatch(createUser(values)).then(()=>goTo("/login")).catch(err=>dispatch(setError(err.message)))
+              
+          
           }
           catch(err){
              console.log(err)
@@ -81,11 +84,12 @@ export default function SignupPage() {
         </Form>
       )}
     </Formik>
+    <div className='row' >
       <p>
         Already a user?
-        <button onClick={() => goTo("/login")} >Login</button>
       </p>
-      {state.error}
+        <button onClick={() => goTo("/login")} >Login</button>
+    </div>
     </div>
   )
 }

@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+/* font-family: 'Shadows Into Light', cursive; */
+/* //for logo */
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Shadows Into Light', cursive;
+    color: #1C5890;
+    font-size: x-large;
+    font-weight: bold;
+    
+}
+body,.app{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+    background-color: #E3E7FF;
+}
+.start-page{
+    display: flex;
+    gap: 20px;
+}
+.login,.signup,.join-quiz,.live-report{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+}
+.form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.form input{
+    width: 300px;
+    height: 30px;
+    border: none;
+    outline: none;
+    outline:1px solid #1C5890 ;
+    background-color: transparent;
+    border-radius: 10px;
+    padding: 5px;
+}
+.row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+button{
+    padding: 10px;
+    border:none;
+    border-radius: 10px;
+    background-color: #0045FF;
+    color: white;
+    cursor: pointer;
+    box-shadow: -5px 5px 5px 1px #7488FD;
+}
+
+button:hover{
+    filter:sepia(30%)
+}
+.quiz-room ,.quiz{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;   
+    text-align: center;
+}
+.quiz-room .row{
+    gap: 50px;
+}
+.header{
+    background-color: #ECEDFE;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    padding: 10px;
+    
+}
+.header h1{
+    font-family: 'Pacifico', cursive;
+    color: #0045FF;
+    font-size: xxx-large;
+}
+.header img{
+    height: 100px;
+}
+/* .header button{
+    position: relative;
+    right: -30vw;
+} */
+.quiz img{
+    width: 30px;
+}
+button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.selected{
+    background-color: rgb(37, 146, 37);
+}
+.error{
+    color: white;
+    background-color: #0045FF;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-radius: 5px;
+    position: absolute;
+    top: -40px;
+    transition-property: top;
+    transition-duration: 1s;
+    transition-timing-function: linear;
+}
+.templates{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    height: 70vh;
+    gap: 20px;
+    
+}
+.create-template {
+    display: flex;
+}
+.question-card button{
+    font-size: small;
+    margin-bottom: 10px;
+}
+.questions{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.question-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #8789cf70;
+    padding: 10px;
+    border-radius: 10px;
+}
+.question-card-btns{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.create-template .choices input{
+    background-color: transparent;
+    color: white;
+    outline: none;
+    border: none;
+}
+.create-template .choices input::placeholder{
+    color: white;
+}
+.question{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    /* background-color: green; */
+}
+.question img{
+    width: 30px;
+}
+.choices{
+    flex-wrap: wrap;
+}
+.col{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+
+}

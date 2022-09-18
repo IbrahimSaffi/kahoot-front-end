@@ -12,7 +12,7 @@ export default function JoinQuizPage() {
     let name = useRef(null)
     
   return (
-    <div>
+    <div className='form join-quiz' >
         <p>Enter PINCODE</p>
         <input ref={roomId} type="text" defaultValue={id?id:""} disabled={id}  />
         <p>Enter Name</p>
