@@ -138,6 +138,11 @@ button{
 }
 .create-template {
     display: flex;
+    flex-direction: row;
+    width: 70vw;
+    height: 50vh;
+    justify-content: space-between;
+    align-items: center;
 }
 .question-card button{
     font-size: small;
@@ -148,7 +153,7 @@ button{
     flex-direction: column;
     gap: 10px;
 }
-.question-card {
+.question-card,.template-card {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -157,7 +162,7 @@ button{
     padding: 10px;
     border-radius: 10px;
 }
-.question-card-btns{
+.question-card-btns,.template-card-btns{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -169,6 +174,7 @@ button{
     outline: none;
     border: none;
 }
+
 .create-template .choices input::placeholder{
     color: white;
 }
@@ -193,4 +199,7 @@ button{
     flex-direction: column;
     gap: 10px;
 
+}
+button:disabled{
+    filter: opacity(20%);
 }

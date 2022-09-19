@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
+import { compose, createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 export const createUser = createAsyncThunk(
     "auth / signup",
     async (data) => {
@@ -73,7 +73,7 @@ export const addQuestion = createAsyncThunk(
             headers: {
                 Authorization: "Bearer " + state.accessToken
             },
-            body:data
+            body: data
         })
         if (res.status !== 200) {
             let e = await res.json()
@@ -88,11 +88,13 @@ export const addQuestion = createAsyncThunk(
 export const getSpecificQuestion = createAsyncThunk(
     "question / get",
     async (id, { getState }) => {
+        console.log(id)
         let state = getState().apiSlice
         let res = await fetch(`http://localhost:8000/question/${id}`, {
             method: "GET",
             headers: {
-                Authorization: "Bearer " + state.accessToken
+                Authorization: "Bearer " + state.accessToken,
+                'Content-Type': 'application/json',
             }
         })
         if (res.status !== 200) {
@@ -107,13 +109,19 @@ export const getSpecificQuestion = createAsyncThunk(
 )
 export const editQuestion = createAsyncThunk(
     "question / edit",
-    async (id, { getState }) => {
+    async (data, { getState }) => {
+        console.log(data.content)
+        for (var key of data.content.entries()) {
+            console.log(key[0] + ', ' + key[1])
+        }
+        console.log(data)
         let state = getState().apiSlice
-        let res = await fetch(`http://localhost:8000/question/${id}`, {
+        let res = await fetch(`http://localhost:8000/question/${data.id}`, {
             method: "POST",
             headers: {
                 Authorization: "Bearer " + state.accessToken
-            }
+            },
+            body: data.content
         })
         if (res.status !== 200) {
             let e = await res.json()
@@ -128,6 +136,7 @@ export const editQuestion = createAsyncThunk(
 export const deleteQuestion = createAsyncThunk(
     "question / delete",
     async (id, { getState }) => {
+        console.log(id)
         let state = getState().apiSlice
         let res = await fetch(`http://localhost:8000/question/${id}`, {
             method: "DELETE",
@@ -167,13 +176,16 @@ export const getTemplate = createAsyncThunk(
 )
 export const editTemplate = createAsyncThunk(
     "quiz / edit",
-    async (id, { getState }) => {
+    async (data, { getState }) => {
+        console.log(data)
         let state = getState().apiSlice
-        let res = await fetch(`http://localhost:8000/quiz/${id}`, {
+        let res = await fetch(`http://localhost:8000/quiz/${data.id}`, {
             method: "POST",
             headers: {
-                Authorization: "Bearer " + state.accessToken
-            }
+                Authorization: "Bearer " + state.accessToken,
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify(data.content)
         })
         if (res.status !== 200) {
             let e = await res.json()
@@ -212,8 +224,10 @@ export const createTemplate = createAsyncThunk(
         let res = await fetch(`http://localhost:8000/quiz/`, {
             method: "POST",
             headers: {
-                Authorization: "Bearer " + state.accessToken
-            }
+                Authorization: "Bearer " + state.accessToken,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
         })
         if (res.status !== 200) {
             let e = await res.json()
@@ -231,12 +245,12 @@ let apiSlice = createSlice({
     initialState: {
         accessToken: localStorage.getItem("ACCESS_TOKEN"),
         profile: JSON.parse(localStorage.getItem("PROFILE")),
-        refreshToken: JSON.parse(localStorage.getItem("REFRESH_TOKEN")),
+        refreshToken: localStorage.getItem("REFRESH_TOKEN"),
         currQuestionIndex: 0,//Teacher side
-        currQuestionData:null,//student side
+        currQuestionData: null,//student side
         questions: [],
-        templates:[],
-        currTemplate:{
+        templates: [],
+        currTemplate: {
             "_id": "632308d9e5a90af31ff22155",
             "questions": [
                 {
@@ -316,66 +330,96 @@ let apiSlice = createSlice({
             "rank": 0,
             "__v": 0
         },
-        roomId:null,
-        socket:null,
-        name:null,//For one time login
-        studentsJoined:[],
-        currAnswers:{}, //Answers given for particular question
-        quizReport:{},
-        answerCount:[],
+        roomId: null,
+        socket: null,
+        name: null,//For one time login
+        studentsJoined: [],
+        currAnswers: {}, //Answers given for particular question
+        quizReport: {},
+        answerCount: [],
+        editPageMode:false,
+        editQuestionMode:false,
+        currentQuestion:null,//For editing question
         //Every time there is error show on top as popup for couple of seconds
         error: "",
         //Might not need it
         loading: false
     },
     reducers: {
-        setRoomId:(state,action)=>{
-       state.roomId= action.payload
+        setRoomId: (state, action) => {
+            state.roomId = action.payload
         },
-        setSocket:(state,action)=>{
+        setSocket: (state, action) => {
             state.socket = action.payload
         },
-        oneTimeLogin:(state,action)=>{
+        oneTimeLogin: (state, action) => {
             state.name = action.payload
         },
-        studentJoined:(state,action)=>{
+        studentJoined: (state, action) => {
             state.studentsJoined.push(action.payload)
         },
-        setCurrentQuestionTeacher:(state,action)=>{
-                state.currQuestionIndex++
+        setCurrentQuestionTeacher: (state, action) => {
+            state.currQuestionIndex++
         },
-        setCurrentQuestionStudent:(state,action)=>{
+        setCurrentQuestionStudent: (state, action) => {
+            console.log("redux",action.payload)
             state.currQuestionData = action.payload
         },
-        setError:(state,action)=>{
-         state.error = action.payload
+        setError: (state, action) => {
+            state.error = action.payload
         },
-        logout:(state,action)=>{
-          state.profile=null
-          state.accessToken=null
-          localStorage.setItem("PROFILE",null)
-          localStorage.setItem("ACCESS_TOKEN",null)
+        logout: (state, action) => {
+            state.profile = null
+            state.accessToken = null
+            localStorage.setItem("PROFILE", null)
+            localStorage.setItem("ACCESS_TOKEN", null)
         },
-        updateReport:(state,action)=>{
-            if(!state.quizReport.hasOwnProperty(action.payload.studentName)){
-               state.quizReport[action.payload.studentName] ={}
+        moveItem: (state, action) => {
+            console.log(current(state.questions))
+            if (action.payload.index > 0 && action.payload.type === "up") {
+                [state.questions[action.payload.index], state.questions[action.payload.index - 1]] = [state.questions[action.payload.index - 1], state.questions[action.payload.index]]
+                console.log(current(state.questions))
             }
-            state.quizReport[action.payload.studentName][state.currQuestionIndex]=action.payload.answer
+            if (action.payload.index < state.questions.length - 1 && action.payload.type === "down") {
+                [state.questions[action.payload.index], state.questions[action.payload.index + 1]] = [state.questions[action.payload.index + 1], state.questions[action.payload.index]]
+                console.log(current(state.questions))
+            }
+        },
+        updateReport: (state, action) => {
+            if (!state.quizReport.hasOwnProperty(action.payload.studentName)) {
+                state.quizReport[action.payload.studentName] = {}
+            }
+            state.quizReport[action.payload.studentName][state.currQuestionIndex] = action.payload.answer
             state.currAnswers[action.payload.studentName] = action.payload.answer
             console.log(current(state.templates.questions[state.currQuestionIndex]))
             //Number of answers each
-           let answersArr =  state.templates.questions[state.currQuestionIndex].choices.map((choice,i)=>{
-            let count = 0 
-            console.log(choice)
-            Object.values(state.currAnswers).forEach(ele=>{
-                if(ele===i){
-                    count++
-                }
+            let answersArr = state.templates.questions[state.currQuestionIndex].choices.map((choice, i) => {
+                let count = 0
+                console.log(choice)
+                Object.values(state.currAnswers).forEach(ele => {
+                    if (ele === i) {
+                        count++
+                    }
+                })
+                return count
             })
-            return count
-           })
-           state.answerCount = answersArr
-           console.log(answersArr)
+            state.answerCount = answersArr
+            console.log(answersArr)
+        },
+        // editTemplatePage: (state,action)=>{
+        //  state.currTemplate = state.templates[action.payload]
+        //  state.editPageMode =true
+        //  state.questions = state.templates[action.payload].questions
+        // },
+        templateReload:(state,action)=>{
+            console.log(state.profile)
+            // state.templates=state.profile.quizes
+            state.editPageMode=false
+            state.questions=[]
+        },
+        questionEditMode:(state,action)=>{
+        //   state.questionToBeEdited =state.questions[action.payload]
+        //   state.editQuestionMode = true
         }
     },
     extraReducers: (builder) => {
@@ -409,8 +453,8 @@ let apiSlice = createSlice({
             state.accessToken = action.payload.accessToken
             state.refreshToken = action.payload.refreshToken
             localStorage.setItem("PROFILE", JSON.stringify(action.payload.profile))
-            localStorage.setItem("ACCESS_TOKEN", JSON.stringify(action.payload.accessToken))
-            localStorage.setItem("REFRESH_TOKEN", JSON.stringify(action.payload.refreshToken))
+            localStorage.setItem("ACCESS_TOKEN", action.payload.accessToken)
+            localStorage.setItem("REFRESH_TOKEN", action.payload.refreshToken)
         })
         builder.addCase(getRandomQuestion.pending, (state, action) => {
             state.loading = true
@@ -437,6 +481,7 @@ let apiSlice = createSlice({
             state.loading = false
             state.error = ""
             state.questions.push(action.payload.data)
+            state.currentQuestion=null
         })
         //Might not need
         builder.addCase(getSpecificQuestion.pending, (state, action) => {
@@ -445,12 +490,14 @@ let apiSlice = createSlice({
         })
         builder.addCase(getSpecificQuestion.rejected, (state, action) => {
             state.error = action.error.message
-            throw state.error
+            throw new Error(state.error)
         })
         builder.addCase(getSpecificQuestion.fulfilled, (state, action) => {
             state.loading = false
             state.error = ""
             state.currQuestion = action.payload
+            state.editQuestionMode = true
+            console.log(state.currQuestion)
         })
         builder.addCase(editQuestion.pending, (state, action) => {
             state.loading = true
@@ -458,13 +505,15 @@ let apiSlice = createSlice({
         })
         builder.addCase(editQuestion.rejected, (state, action) => {
             state.error = action.error.message
-            throw state.error
+            throw new Error(state.error)
         })
         builder.addCase(editQuestion.fulfilled, (state, action) => {
             state.loading = false
             state.error = ""
-            let updatedQuestionIndex = state.questions.findIndex(question=>action.payload.data._id===question._id)
-            state.questions.splice(updatedQuestionIndex,1,action.payload.data)
+            let updatedQuestionIndex = state.questions.findIndex(question => action.payload.data._id === question._id)
+            state.questions.splice(updatedQuestionIndex, 1, action.payload.data)
+            state.currentQuestion=null
+            console.log(action.payload.response)
         })
         builder.addCase(deleteQuestion.pending, (state, action) => {
             state.loading = true
@@ -477,8 +526,10 @@ let apiSlice = createSlice({
         builder.addCase(deleteQuestion.fulfilled, (state, action) => {
             state.loading = false
             state.error = ""
-            let deletedQuestionIndex = state.questions.findIndex(question=>action.payload.id===question._id)
-            state.questions.splice(deletedQuestionIndex,1)
+            console.log(state.questions)
+            let deletedQuestionIndex = state.questions.findIndex(question => action.payload.id === question._id||question===action.payload.id)
+
+            state.questions.splice(deletedQuestionIndex, 1)
         })
         builder.addCase(getTemplate.pending, (state, action) => {
             state.loading = true
@@ -491,7 +542,9 @@ let apiSlice = createSlice({
         builder.addCase(getTemplate.fulfilled, (state, action) => {
             state.loading = false
             state.error = ""
-           state.currTemplate = action.payload
+            state.currTemplate = action.payload
+            state.questions = action.payload.questions
+            state.editPageMode=true
         })
         builder.addCase(editTemplate.pending, (state, action) => {
             state.loading = true
@@ -499,13 +552,14 @@ let apiSlice = createSlice({
         })
         builder.addCase(editTemplate.rejected, (state, action) => {
             state.error = action.error.message
-            throw state.error
+            throw new Error(state.error)
         })
         builder.addCase(editTemplate.fulfilled, (state, action) => {
             state.loading = false
             state.error = ""
-           let updatedTemplateIndex  = state.templates.findIndex(template=>template._id===action.payload.data._id)
-           state.templates.splice(updatedTemplateIndex,1,action.payload.data)
+            let updatedTemplateIndex = state.templates.findIndex(template => template._id === action.payload.data._id)
+            state.templates.splice(updatedTemplateIndex, 1, action.payload.data)
+            state.editPageMode = false
         })
         builder.addCase(deleteTemplate.pending, (state, action) => {
             state.loading = true
@@ -513,28 +567,29 @@ let apiSlice = createSlice({
         })
         builder.addCase(deleteTemplate.rejected, (state, action) => {
             state.error = action.error.message
-            throw state.error
+            throw new Error(state.error)
         })
         builder.addCase(deleteTemplate.fulfilled, (state, action) => {
             state.loading = false
             state.error = ""
-            let deletedTemplateIndex  = state.templates.findIndex(template=>template._id===action.payload.id)
-           state.templates.splice(deletedTemplateIndex,1)
+            let deletedTemplateIndex = state.templates.findIndex(template => template._id === action.payload.id)
+            state.templates.splice(deletedTemplateIndex, 1)
         })
-        // builder.addCase(createTemplate.pending, (state, action) => {
-        //     state.loading = true
-        //     state.error = ""
-        // })
-        // builder.addCase(createTemplate.rejected, (state, action) => {
-        //     state.error = action.error.message
-        //     throw state.error
-        // })
-        // builder.addCase(createTemplate.fulfilled, (state, action) => {
-        //     state.loading = false
-        //     state.error = ""
-        //    state.templates.push(action.payload.data)
-        // })
+        builder.addCase(createTemplate.pending, (state, action) => {
+            state.loading = true
+            state.error = ""
+        })
+        builder.addCase(createTemplate.rejected, (state, action) => {
+            state.error = action.error.message
+            throw new Error(state.error)
+        })
+        builder.addCase(createTemplate.fulfilled, (state, action) => {
+            state.loading = false
+            state.error = ""
+            console.log(action.payload.data)
+           state.templates.push(action.payload.data)
+        })
     }
 })
-export const {setRoomId,setSocket,oneTimeLogin,studentJoined,setCurrentQuestionStudent,setCurrentQuestionTeacher,updateReport,setError,logout} =apiSlice.actions
+export const { setRoomId, setSocket, oneTimeLogin, studentJoined, setCurrentQuestionStudent, setCurrentQuestionTeacher, updateReport, setError, logout, moveItem ,editTemplatePage,templateReload,questionEditMode} = apiSlice.actions
 export default apiSlice.reducer

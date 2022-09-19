@@ -16,6 +16,7 @@ export default function LiveReport() {
             setBtnDisability(false)
         }, state.currTemplate.questions[state.currQuestionIndex].timer*1000)
         state.socket.on("answer-update",(data)=>{
+            console.log(data)
             dispatch(updateReport(data))
         })
         setBtnDisability(true)

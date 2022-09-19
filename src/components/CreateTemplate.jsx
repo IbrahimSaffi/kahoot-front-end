@@ -1,6 +1,7 @@
 import React, { createRef, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import apiSlice, { addQuestion, deleteQuestion, setError } from '../slices/apiSlice'
+import apiSlice, { addQuestion, createTemplate, deleteQuestion, editQuestion, editTemplate, getSpecificQuestion, moveItem, questionEditMode, setError } from '../slices/apiSlice'
+import {useNavigate} from "react-router-dom"
 
 export default function CreateTemplate() {
     // let MCQ =useRef()
@@ -9,28 +10,57 @@ export default function CreateTemplate() {
     let question = useRef()
     let noOfOptionsRef = useRef()
     let timer =useRef()
+    let templateTitle =  useRef()
     let [correctOption,SetCorrect] = useState(null)
     let [type,setType] = useState("TrueFalse")
     let [img,setImg] = useState(null)
     let [noOfOptions,setOptions] = useState(new Array(4).fill(0))
     //https://stackoverflow.com/questions/54633690/how-can-i-use-multiple-refs-for-an-array-of-elements-with-hooks 
     let [optionRefs,setRefs] = useState([])
+    let goTo = useNavigate()
+    console.log(state.currQuestion)
     useEffect(()=>{
       let tempRefs =  noOfOptions.map((option,i)=>createRef())
       setRefs(tempRefs)
     },[noOfOptions])
+    useEffect(()=>{
+     if(state.editPageMode){
+     templateTitle.current.value=state.currTemplate.title
+     }
 
+    },[])
+    useEffect(()=>{
+        if(state.currQuestion){
+            console.log("here")
+            question.current.value = state.currQuestion.text
+            timer.current.value = state.currQuestion.timer
+            setType(state.currQuestion.type)
+            SetCorrect(state.currQuestion.choices.indexOf(state.currQuestion.correct_answer))
+            setImg(state.currQuestion.img)
+         }
+    },[state.currQuestion])
     return (
+        <div style={{display:"flex",flexDirection:"column",jusitfyContent:"center",alignItems:"center"}}>
+            <div className='row' >
+            <input ref={templateTitle}  type="text" placeholder='Title of template' />
+            </div>
         <div className='create-template' >
             <div className='questions' >
-                {state.questions.length!==0?state.questions.map(question=>{
+                {state.questions.length!==0?state.questions.map((question,i)=>{
                     return <div className="question-card">
+                        <p>{question.text}</p>
                         <div className="question-card-btns">
-                        <button>Move UP</button>
-                        <button>Edit</button>
-                        <button>Move Down</button>
+                        <button onClick={()=>dispatch(moveItem({type:"up",index:i}))} >Move UP</button>
+                        <button onClick={()=>{dispatch(getSpecificQuestion(question._id))
+                        }}>Edit</button>
+                        <button onClick={()=>dispatch(moveItem({type:"down",index:i}))} >Move Down</button>
                         </div>
-                        <button onClick={()=>dispatch(deleteQuestion(question._id))} >Delete</button>
+                        <button onClick={()=>
+                        {
+                            dispatch(deleteQuestion(state.editPageMode?question:question._id))
+                            console.log(state.questions)
+                        }
+                            } >Delete</button>
                     </div>
                 }):"No Questions Added"}
                 <button onClick={()=>{
@@ -57,13 +87,17 @@ export default function CreateTemplate() {
                                 formData.append("correct_answer",correctOption)
                             }
                             //Some code copied from my own old code
-                            
-                            dispatch(addQuestion(formData)).catch(err=>dispatch(setError(err.message)))
+                            if(!state.currQuestion){
+                                dispatch(addQuestion(formData)).catch(err=>dispatch(setError(err.message)))
+                            }
+                            else{
+                                dispatch(editQuestion({content:formData,id:state.currQuestion._id})).catch(err=>dispatch(setError(err.message)))
+                            }
                         }
                         else{
                             dispatch(setError("Some Fields Missing"))
                         }
-                     }} >Add Question</button>
+                     }} >{state.currQuestion?"Update Question":"Add Question"}</button>
             </div>
             <div className='question' >
                 <input ref={question} type="text" placeholder='Write your question here' />
@@ -99,6 +133,19 @@ export default function CreateTemplate() {
                     </div>
                      
             </div>
+        </div>
+        <button onClick={()=>
+            {  if(!state.editPageMode){
+                dispatch(createTemplate({creater:state.profile._id,title:templateTitle.current.value,questions:state.questions}))
+                .then(()=>goTo("/teacher/templates"))
+                .catch(err=>dispatch(setError(err.message)))}
+               else{
+                dispatch(editTemplate({content:{creater:state.profile._id,title:templateTitle.current.value,questions:state.questions},id:state.currTemplate._id}))
+                goTo("/teacher/templates")
+               }
+            } 
+            }
+                   > Save Template</button>
         </div>
     )
 }

@@ -30,12 +30,12 @@ export default function QuizPage() {
         showResult(false)
     }
    },[state.currQuestionData])
-   useEffect(()=>{
-    if(state.socket){
-        console.log(selectedOption)
-        state.socket.emit("receive-answer", { roomId: state.roomId, answer: selectedOption })
-    }
-   },[selectedOption])
+//    useEffect(()=>{
+//     if(state.socket){
+//         console.log(selectedOption)
+//         state.socket.emit("receive-answer", { roomId: state.roomId, answer: selectedOption })
+//     }
+//    },[selectedOption])
     return (
         <div className='quiz'>
             {!state.currQuestionData ?
@@ -48,9 +48,11 @@ export default function QuizPage() {
                     </p>
                     <div className='row' >
                     {state.currQuestionData.choices.map((choice, i) => {
-                        return <button className={choice == state.currQuestionData.correct_answer && result?"selected":""}  disabled={result} onClick={() => {
-                            setSelected(i)
-                        }}>{selectedOption===i ? <img src="./check.png" alt="" /> : null} {choice}</button>
+                        return <button key={state.currQuestionData._id+i} className={choice.toLowerCase() == state.currQuestionData.correct_answer&& result?"selected":""}  disabled={result} onClick={() => {
+                            state.socket.emit("receive-answer", { roomId: state.roomId, answer:i })
+                        }}>{
+                            selectedOption===i ? <img src="./check.png" alt="" /> : null
+                            } {choice}</button>
                     })}
 
                     </div>
