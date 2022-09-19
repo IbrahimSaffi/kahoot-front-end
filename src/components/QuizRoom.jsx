@@ -11,8 +11,6 @@ import { useNavigate } from 'react-router-dom'
 export default function QuizRoom() {
   let dispatch = useDispatch(apiSlice)
   let state = useSelector(state => state.apiSlice)
-  // let [socket,setSocket] = useState(null)
-  console.log(state.studentsJoined.length)
   let goTo = useNavigate()
   useEffect(() => {
     //got idea to generate number from here

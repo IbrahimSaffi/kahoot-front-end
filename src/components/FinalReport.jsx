@@ -9,7 +9,6 @@ export default function FinalReport() {
   useEffect(() => {
     //Generating final report
     let finalReport = {}
-    console.log(state.quizReport)
     Object.keys(state.quizReport).forEach(student => {
       let tempArr = []
       Object.keys(state.quizReport[student]).forEach(question=>{

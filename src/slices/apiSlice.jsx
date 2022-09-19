@@ -391,11 +391,10 @@ let apiSlice = createSlice({
             }
             state.quizReport[action.payload.studentName][state.currQuestionIndex] = action.payload.answer
             state.currAnswers[action.payload.studentName] = action.payload.answer
-            console.log(current(state.templates.questions[state.currQuestionIndex]))
+            console.log(current(state.quizReport))
             //Number of answers each
             let answersArr = state.templates.questions[state.currQuestionIndex].choices.map((choice, i) => {
                 let count = 0
-                console.log(choice)
                 Object.values(state.currAnswers).forEach(ele => {
                     if (ele === i) {
                         count++
@@ -406,21 +405,21 @@ let apiSlice = createSlice({
             state.answerCount = answersArr
             console.log(answersArr)
         },
-        // editTemplatePage: (state,action)=>{
-        //  state.currTemplate = state.templates[action.payload]
-        //  state.editPageMode =true
-        //  state.questions = state.templates[action.payload].questions
-        // },
+        editTemplatePage: (state,action)=>{
+         state.currTemplate = state.templates[action.payload]
+         state.editPageMode =true
+         state.questions = state.templates[action.payload].questions
+        },
         templateReload:(state,action)=>{
             console.log(state.profile)
             // state.templates=state.profile.quizes
             state.editPageMode=false
             state.questions=[]
         },
-        questionEditMode:(state,action)=>{
-        //   state.questionToBeEdited =state.questions[action.payload]
-        //   state.editQuestionMode = true
-        }
+        // questionEditMode:(state,action)=>{
+        // //   state.questionToBeEdited =state.questions[action.payload]
+        // //   state.editQuestionMode = true
+        // }
     },
     extraReducers: (builder) => {
         builder.addCase(createUser.pending, (state, action) => {

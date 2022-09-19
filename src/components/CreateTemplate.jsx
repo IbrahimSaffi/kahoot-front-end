@@ -25,6 +25,7 @@ export default function CreateTemplate() {
     },[noOfOptions])
     useEffect(()=>{
      if(state.editPageMode){
+        console.log("here",state.currTemplate)
      templateTitle.current.value=state.currTemplate.title
      }
 
@@ -76,7 +77,7 @@ export default function CreateTemplate() {
                             const formData = new FormData()
                             formData.append("text",question.current.value)
                             if(type==="MCQ"){
-                                formData.append("choices",choices)
+                                formData.append("choices",JSON.stringify(choices))
                             }
                             formData.append("type",type)
                             formData.append("creater",state.profile._id)
@@ -95,6 +96,11 @@ export default function CreateTemplate() {
                             else{
                                 dispatch(editQuestion({content:formData,id:state.currQuestion._id})).catch(err=>dispatch(setError(err.message)))
                             }
+                            setType("TrueFalse")
+                            setImg(null)
+                            SetCorrect(null)
+                            question.current.value = ""
+                            timer.current.value=30
                         }
                         else{
                             dispatch(setError("Some Fields Missing"))

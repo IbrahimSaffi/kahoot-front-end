@@ -5,13 +5,17 @@ import {useNavigate} from "react-router-dom"
 export default function Templates() {
     let dispatch = useDispatch(apiSlice)
     let state = useSelector(state => state.apiSlice)
-    console.log(state.templates)
+    let goTo = useNavigate()
    useEffect(()=>{
+    if(state.profile){
+        dispatch(templateReload())
+    }
+    else{
+        goTo("/login")
+    }
     //Setting templates on reload
     //reseting editMode
-    dispatch(templateReload())
    },[])
-    let goTo = useNavigate()
     return (
         <div className='templates' >
             {state.templates.length>0?state.templates.map((template,i) => {
@@ -25,7 +29,7 @@ export default function Templates() {
                         <button onClick={()=>
                             {
                             dispatch(getTemplate(template._id))
-                            // dispatch(editTemplatePage(i))
+                            dispatch(editTemplatePage(i))
                              goTo("/create-template")
                             }} >Edit</button>
                         <button onClick={()=>
