@@ -140,9 +140,28 @@ button{
     display: flex;
     flex-direction: row;
     width: 70vw;
-    height: 50vh;
-    justify-content: space-between;
+    max-height: 70vh;
+    justify-content: center;
     align-items: center;
+    width: 100%;
+    gap: 5%;
+}
+.question{
+    max-width: 50%;
+}
+.template-management{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 90vh;
+    margin-top: 10vh;
+    padding: 0;
+    width: 100vw;
+    gap: 1vh;
+}
+.question{
+    overflow: auto;
 }
 .question-card button{
     font-size: small;

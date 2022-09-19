@@ -425,7 +425,7 @@ let apiSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(createUser.pending, (state, action) => {
             state.loading = true
-            state.error = ""
+            // state.error = ""
         })
         builder.addCase(createUser.rejected, (state, action) => {
             state.error = action.error.message
@@ -433,12 +433,12 @@ let apiSlice = createSlice({
         })
         builder.addCase(createUser.fulfilled, (state, action) => {
             state.loading = false
-            state.error = ""
+            // state.error = ""
 
         })
         builder.addCase(loginUser.pending, (state, action) => {
             state.loading = true
-            state.error = ""
+            // state.error = ""
         })
         builder.addCase(loginUser.rejected, (state, action) => {
             state.error = action.error.message
@@ -446,7 +446,7 @@ let apiSlice = createSlice({
         })
         builder.addCase(loginUser.fulfilled, (state, action) => {
             state.loading = false
-            state.error = ""
+            // state.error = ""
             state.profile = action.payload.profile
 
             state.templates = action.payload.profile.quizes
@@ -458,7 +458,7 @@ let apiSlice = createSlice({
         })
         builder.addCase(getRandomQuestion.pending, (state, action) => {
             state.loading = true
-            state.error = ""
+            // state.error = ""
         })
         builder.addCase(getRandomQuestion.rejected, (state, action) => {
             state.error = action.error.message
@@ -466,12 +466,12 @@ let apiSlice = createSlice({
         })
         builder.addCase(getRandomQuestion.fulfilled, (state, action) => {
             state.loading = false
-            state.error = ""
+            // state.error = ""
             state.currQuestion = action.payload
         })
         builder.addCase(addQuestion.pending, (state, action) => {
             state.loading = true
-            state.error = ""
+            // state.error = ""
         })
         builder.addCase(addQuestion.rejected, (state, action) => {
             state.error = action.error.message
@@ -479,14 +479,14 @@ let apiSlice = createSlice({
         })
         builder.addCase(addQuestion.fulfilled, (state, action) => {
             state.loading = false
-            state.error = ""
+            // state.error = ""
             state.questions.push(action.payload.data)
             state.currentQuestion=null
         })
         //Might not need
         builder.addCase(getSpecificQuestion.pending, (state, action) => {
             state.loading = true
-            state.error = ""
+            // state.error = ""
         })
         builder.addCase(getSpecificQuestion.rejected, (state, action) => {
             state.error = action.error.message
@@ -494,14 +494,14 @@ let apiSlice = createSlice({
         })
         builder.addCase(getSpecificQuestion.fulfilled, (state, action) => {
             state.loading = false
-            state.error = ""
+            // state.error = ""
             state.currQuestion = action.payload
             state.editQuestionMode = true
             console.log(state.currQuestion)
         })
         builder.addCase(editQuestion.pending, (state, action) => {
             state.loading = true
-            state.error = ""
+            // state.error = ""
         })
         builder.addCase(editQuestion.rejected, (state, action) => {
             state.error = action.error.message
@@ -509,7 +509,7 @@ let apiSlice = createSlice({
         })
         builder.addCase(editQuestion.fulfilled, (state, action) => {
             state.loading = false
-            state.error = ""
+            // state.error = ""
             let updatedQuestionIndex = state.questions.findIndex(question => action.payload.data._id === question._id)
             state.questions.splice(updatedQuestionIndex, 1, action.payload.data)
             state.currentQuestion=null
@@ -517,7 +517,7 @@ let apiSlice = createSlice({
         })
         builder.addCase(deleteQuestion.pending, (state, action) => {
             state.loading = true
-            state.error = ""
+            // state.error = ""
         })
         builder.addCase(deleteQuestion.rejected, (state, action) => {
             state.error = action.error.message
@@ -525,7 +525,7 @@ let apiSlice = createSlice({
         })
         builder.addCase(deleteQuestion.fulfilled, (state, action) => {
             state.loading = false
-            state.error = ""
+            // state.error = ""
             console.log(state.questions)
             let deletedQuestionIndex = state.questions.findIndex(question => action.payload.id === question._id||question===action.payload.id)
 
@@ -533,7 +533,7 @@ let apiSlice = createSlice({
         })
         builder.addCase(getTemplate.pending, (state, action) => {
             state.loading = true
-            state.error = ""
+            // state.error = ""
         })
         builder.addCase(getTemplate.rejected, (state, action) => {
             state.error = action.error.message
@@ -541,14 +541,14 @@ let apiSlice = createSlice({
         })
         builder.addCase(getTemplate.fulfilled, (state, action) => {
             state.loading = false
-            state.error = ""
+            // state.error = ""
             state.currTemplate = action.payload
             state.questions = action.payload.questions
             state.editPageMode=true
         })
         builder.addCase(editTemplate.pending, (state, action) => {
             state.loading = true
-            state.error = ""
+            // state.error = ""
         })
         builder.addCase(editTemplate.rejected, (state, action) => {
             state.error = action.error.message
@@ -556,14 +556,14 @@ let apiSlice = createSlice({
         })
         builder.addCase(editTemplate.fulfilled, (state, action) => {
             state.loading = false
-            state.error = ""
+            // state.error = ""
             let updatedTemplateIndex = state.templates.findIndex(template => template._id === action.payload.data._id)
             state.templates.splice(updatedTemplateIndex, 1, action.payload.data)
             state.editPageMode = false
         })
         builder.addCase(deleteTemplate.pending, (state, action) => {
             state.loading = true
-            state.error = ""
+            // state.error = ""
         })
         builder.addCase(deleteTemplate.rejected, (state, action) => {
             state.error = action.error.message
@@ -571,13 +571,13 @@ let apiSlice = createSlice({
         })
         builder.addCase(deleteTemplate.fulfilled, (state, action) => {
             state.loading = false
-            state.error = ""
+            // state.error = ""
             let deletedTemplateIndex = state.templates.findIndex(template => template._id === action.payload.id)
             state.templates.splice(deletedTemplateIndex, 1)
         })
         builder.addCase(createTemplate.pending, (state, action) => {
             state.loading = true
-            state.error = ""
+            // state.error = ""
         })
         builder.addCase(createTemplate.rejected, (state, action) => {
             state.error = action.error.message
@@ -585,7 +585,7 @@ let apiSlice = createSlice({
         })
         builder.addCase(createTemplate.fulfilled, (state, action) => {
             state.loading = false
-            state.error = ""
+            // state.error = ""
             console.log(action.payload.data)
            state.templates.push(action.payload.data)
         })

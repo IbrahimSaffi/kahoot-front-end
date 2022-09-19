@@ -40,9 +40,11 @@ export default function CreateTemplate() {
          }
     },[state.currQuestion])
     return (
-        <div style={{display:"flex",flexDirection:"column",jusitfyContent:"center",alignItems:"center"}}>
-            <div className='row' >
+        <div className='template-management' >
+            <div>
+                <p>Enter Template Title</p>
             <input ref={templateTitle}  type="text" placeholder='Title of template' />
+             
             </div>
         <div className='create-template' >
             <div className='questions' >
@@ -57,7 +59,7 @@ export default function CreateTemplate() {
                         </div>
                         <button onClick={()=>
                         {
-                            dispatch(deleteQuestion(state.editPageMode?question:question._id))
+                            dispatch(deleteQuestion(question._id))
                             console.log(state.questions)
                         }
                             } >Delete</button>
@@ -100,6 +102,7 @@ export default function CreateTemplate() {
                      }} >{state.currQuestion?"Update Question":"Add Question"}</button>
             </div>
             <div className='question' >
+                <p>Enter Question Text</p>
                 <input ref={question} type="text" placeholder='Write your question here' />
                 <input onChange={(e)=>setImg(e.target.files[0])}  type="file" accept="image/png, image/jpeg" />
                 <div className='row' >
