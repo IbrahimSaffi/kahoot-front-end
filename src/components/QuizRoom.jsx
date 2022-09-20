@@ -21,7 +21,7 @@ export default function QuizRoom() {
     roomId.splice(7, 0, "-")
     roomId = roomId.join("")
     dispatch(setRoomId(roomId))
-    dispatch(setSocket(io("http://localhost:8000/"))) 
+    dispatch(setSocket(io("https://kahoot-clone1.herokuapp.com/"))) 
     console.log(state.currTemplate)
   }, [])
   useEffect(()=>{

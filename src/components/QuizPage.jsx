@@ -12,7 +12,7 @@ export default function QuizPage() {
     let [timer, setTimer] = useState(null)
 
     useEffect(() => {
-        let socket = io("http://localhost:8000/")
+        let socket = io("https://kahoot-clone1.herokuapp.com/")
         console.log("socket created", socket.id)
         dispatch(setSocket(socket))
 
