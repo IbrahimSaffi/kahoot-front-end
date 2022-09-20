@@ -3,7 +3,7 @@ export const createUser = createAsyncThunk(
     "auth / signup",
     async (data) => {
         console.log(data)
-        let res = await fetch("http://localhost:8000/auth/signup", {
+        let res = await fetch("https://kahoot-clone1.herokuapp.com/auth/signup", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export const createUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
     "auth / login",
     async (data) => {
-        let res = await fetch("http://localhost:8000/auth/login", {
+        let res = await fetch("https://kahoot-clone1.herokuapp.com/auth/login", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export const getRandomQuestion = createAsyncThunk(
     "question / random",
     async (data, { getState }) => {
         let state = getState().apiSlice
-        let res = await fetch("http://localhost:8000/question/", {
+        let res = await fetch("https://kahoot-clone1.herokuapp.com/question/", {
             method: "GET",
             headers: {
                 Authorization: "Bearer " + state.accessToken
@@ -68,7 +68,7 @@ export const addQuestion = createAsyncThunk(
         }
         let state = getState().apiSlice
         console.log(state.accessToken)
-        let res = await fetch("http://localhost:8000/question/add", {
+        let res = await fetch("https://kahoot-clone1.herokuapp.com/question/add", {
             method: "POST",
             headers: {
                 Authorization: "Bearer " + state.accessToken
@@ -90,7 +90,7 @@ export const getSpecificQuestion = createAsyncThunk(
     async (id, { getState }) => {
         console.log(id)
         let state = getState().apiSlice
-        let res = await fetch(`http://localhost:8000/question/${id}`, {
+        let res = await fetch(`https://kahoot-clone1.herokuapp.com/question/${id}`, {
             method: "GET",
             headers: {
                 Authorization: "Bearer " + state.accessToken,
@@ -116,7 +116,7 @@ export const editQuestion = createAsyncThunk(
         }
         console.log(data)
         let state = getState().apiSlice
-        let res = await fetch(`http://localhost:8000/question/${data.id}`, {
+        let res = await fetch(`https://kahoot-clone1.herokuapp.com/question/${data.id}`, {
             method: "POST",
             headers: {
                 Authorization: "Bearer " + state.accessToken
@@ -138,7 +138,7 @@ export const deleteQuestion = createAsyncThunk(
     async (id, { getState }) => {
         console.log(id)
         let state = getState().apiSlice
-        let res = await fetch(`http://localhost:8000/question/${id}`, {
+        let res = await fetch(`https://kahoot-clone1.herokuapp.com/question/${id}`, {
             method: "DELETE",
             headers: {
                 Authorization: "Bearer " + state.accessToken
@@ -158,7 +158,7 @@ export const getTemplate = createAsyncThunk(
     "quiz / get",
     async (id, { getState }) => {
         let state = getState().apiSlice
-        let res = await fetch(`http://localhost:8000/quiz/${id}`, {
+        let res = await fetch(`https://kahoot-clone1.herokuapp.com/quiz/${id}`, {
             method: "GET",
             headers: {
                 Authorization: "Bearer " + state.accessToken
@@ -179,7 +179,7 @@ export const editTemplate = createAsyncThunk(
     async (data, { getState }) => {
         console.log(data)
         let state = getState().apiSlice
-        let res = await fetch(`http://localhost:8000/quiz/${data.id}`, {
+        let res = await fetch(`https://kahoot-clone1.herokuapp.com/quiz/${data.id}`, {
             method: "POST",
             headers: {
                 Authorization: "Bearer " + state.accessToken,
@@ -201,7 +201,7 @@ export const deleteTemplate = createAsyncThunk(
     "quiz / delete",
     async (id, { getState }) => {
         let state = getState().apiSlice
-        let res = await fetch(`http://localhost:8000/quiz/${id}`, {
+        let res = await fetch(`https://kahoot-clone1.herokuapp.com/quiz/${id}`, {
             method: "DELETE",
             headers: {
                 Authorization: "Bearer " + state.accessToken
@@ -221,7 +221,7 @@ export const createTemplate = createAsyncThunk(
     "quiz / create",
     async (data, { getState }) => {
         let state = getState().apiSlice
-        let res = await fetch(`http://localhost:8000/quiz/`, {
+        let res = await fetch(`https://kahoot-clone1.herokuapp.com/quiz/`, {
             method: "POST",
             headers: {
                 Authorization: "Bearer " + state.accessToken,
